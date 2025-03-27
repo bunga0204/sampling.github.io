@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毒品抽樣計算機</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 80%;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .result {
+            color: #333;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>毒品抽樣計算機</h1>
+        
+        <!-- User input for variable number of numbers -->
+        <div class="input-section">
+            <label for="user-input">請輸入各類別之個數:</label>
+            <textarea id="user-input" rows="4" placeholder="以逗號、空白區隔"></textarea>
+        </div>
+        
+        <!-- Button to process the input numbers -->
+        <button id="execute-module">計算</button>
+        
+        <!-- Error message for invalid input -->
+        <p id="error-message" class="error-message"></p>
+        
+        <!-- Result output -->
+        <div class="result-section">
+            <p id="result" class="result"></p>
+        </div>
+    </div>
+
+    <script>
+        const executeButton = document.getElementById('execute-module');
+        const userInput = document.getElementById('user-input');
+        const errorMessage = document.getElementById('error-message');
+        const resultDisplay = document.getElementById('result');
+
+        // Predefined array of numbers
+        const numbersArray = [642, 807, 270, 546, 29, 835, 828, 386, 10, 216, 322, 45, 921, 930, 614, 111, 134, 276, 257, 265, 897, 608, 186, 790];
+
+        // Function to process the user input
+        executeButton.addEventListener('click', () => {
+            const input = userInput.value.trim();
+            const modulusArray = parseInput(input);
+
+            errorMessage.textContent = '';
+            resultDisplay.innerHTML = ''; // This clears the previous results
+
+            if (modulusArray && modulusArray.length <= numbersArray.length) {
+                // Calculate the modulus for each number in the predefined array with the corresponding modulus values from user input
+                const results = numbersArray.slice(0, modulusArray.length).map((num, index) => {
+                    let modResult = num % modulusArray[index];
+                    // Handle result transformation as per request
+                    if (modResult === 0) {
+                        // If result is zero, transform it to input
+                        modResult = modulusArray[index];
+                    }
+                    return modResult;
+                });
+
+                // Format the results as requested: "X choose X, X+1 (random number N)"
+                const formattedResults = results.map((modResult, index) => {
+                    const originalNumber = numbersArray[index];
+                    const chooseResult = modResult === modulusArray[index] ? `第${index+1}類別 抽${modResult}, 1 (random number ${originalNumber})` : `第${index+1}類別 抽 ${modResult}, ${modResult + 1} (random number ${originalNumber})`;
+                    return chooseResult;
+                });
+
+                formattedResults.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.textContent = result;
+                    resultDisplay.appendChild(resultItem);
+                });
+            } else {
+                errorMessage.textContent = `Please enter a valid list of numbers (up to ${numbersArray.length} numbers).`;
+                resultDisplay.textContent = '';
+            }
+        });
+
+        // Function to parse the input
+        function parseInput(input) {
+            // Split input by comma, space, or new line, then map to numbers
+            const numbers = input.split(/[\s,;]+/).map(item => item.trim()).filter(item => item !== '');
+            
+            // Check if all values are valid numbers
+            const validNumbers = numbers.map(num => parseFloat(num)).filter(num => !isNaN(num));
+
+            return validNumbers.length === numbers.length ? validNumbers : null;
+        }
+    </script>
+</body>
+</html>
