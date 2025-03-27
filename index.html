@@ -135,15 +135,17 @@
 
                 // Format the results as requested: "X choose X, X+1 (random number N)"
                 const formattedResults = results.map((modResult, index) => {
-                    const originalNumber = numbersArray[index];
-                    const chooseResult = modResult === modulusArray[index] ? `第${index+1}類別 抽${modResult}, 1 (random number ${originalNumber})` : `第${index+1}類別 抽 ${modResult}, ${modResult + 1} (random number ${originalNumber})`;
-                    return chooseResult;
+                const originalNumber = numbersArray[index];
+                const chooseResult = modResult === modulusArray[index] 
+                    ? `第${index+1}類別 抽${modResult}, 1<br>(random number ${originalNumber})`
+                    : `第${index+1}類別 抽 ${modResult}, ${modResult + 1}<br>(random number ${originalNumber})`;
+                return chooseResult;
                 });
-
+                
                 formattedResults.forEach(result => {
                     const resultItem = document.createElement('div');
                     resultItem.className = 'result-item';
-                    resultItem.textContent = result;
+                    resultItem.innerHTML = result;  // Use innerHTML instead of textContent to render HTML elements
                     resultDisplay.appendChild(resultItem);
                 });
             } else {
