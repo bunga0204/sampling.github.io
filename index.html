@@ -136,9 +136,14 @@
                 // Format the results as requested: "X choose X, X+1 (random number N)"
                 const formattedResults = results.map((modResult, index) => {
                 const originalNumber = numbersArray[index];
-                const chooseResult = modResult === modulusArray[index] 
-                    ? `第${index+1}類別 抽${modResult}, 1<br>(random number ${originalNumber})`
-                    : `第${index+1}類別 抽 ${modResult}, ${modResult + 1}<br>(random number ${originalNumber})`;
+                let chooseResult
+                if (modulusArray[index] === 1){
+                    chooseResult = `第${index+1}類別僅一個<br>(random number ${originalNumber})`
+                }else{
+                    chooseResult = modResult === modulusArray[index] 
+                        ? `第${index+1}類別 抽 ${modResult}, 1<br>(random number ${originalNumber})`
+                        : `第${index+1}類別 抽 ${modResult}, ${modResult + 1}<br>(random number ${originalNumber})`;
+                }
                 return chooseResult;
                 });
                 
